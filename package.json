@@ -1,0 +1,14 @@
+{
+  "name": "pachi-ai-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "帕奇的AI工具包 · Pachi's AI Toolkit — 可复用 Agent Skills 集合",
+  "scripts": {
+    "verify": "node scripts/verify.mjs",
+    "link": "node scripts/link.mjs",
+    "link:dry": "node scripts/link.mjs --dry-run",
+    "unlink": "node scripts/unlink.mjs",
+    "test": "npm --prefix tools/image-gen test"
+  },
+  "license": "MIT"
+}
