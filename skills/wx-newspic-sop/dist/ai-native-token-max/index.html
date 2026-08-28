@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token 最大化 · AI Native 公司</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/themes/xiaohongshu-white.css">
+<link rel="stylesheet" href="../../assets/animations/animations.css">
+<style>
+/* ===== xiaohongshu-white 主题自定义 deck ===== */
+.deck,.slide { width: 810px; height: 1080px; }
+.slide { 
+  padding: clamp(48px, 8%, 80px); 
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.slide.is-active { z-index: 10; }
+
+/* 封面保持居中 */
+.slide[data-title="Cover"] { justify-content: center; }
+
+/* ---- 核心排版 ---- */
+.tw-kicker {
+  font-size: clamp(13px, 2vw, 20px);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: clamp(8px, 1.2vw, 16px);
+}
+.tw-title {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 9.5vw, 84px);
+  line-height: 1.05;
+  font-weight: 850;
+  letter-spacing: -.02em;
+  color: var(--text-1);
+  margin: 0 0 clamp(8px, 1.5vw, 18px);
+}
+.tw-title-md {
+  font-size: clamp(32px, 7vw, 62px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -.015em;
+  margin: 0 0 clamp(6px, 1vw, 14px);
+  color: var(--text-1);
+}
+.tw-sub {
+  font-size: clamp(16px, 3vw, 26px);
+  line-height: 1.5;
+  color: var(--text-2);
+  margin: 0 0 clamp(10px, 2vw, 24px);
+}
+.tw-body {
+  font-size: clamp(14px, 2.5vw, 21px);
+  line-height: 1.6;
+  color: var(--text-2);
+  margin: 0 0 clamp(8px, 1.2vw, 16px);
+}
+.tw-dim { color: var(--text-3); font-size: clamp(12px, 1.8vw, 16px); }
+
+/* ---- 渐变标题 ---- */
+.tw-grad {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- 高亮文字 ---- */
+.tw-focus {
+  display: inline-block;
+  padding: clamp(3px, .6vw, 8px) clamp(8px, 1.2vw, 16px);
+  border-radius: clamp(8px, 1.5vw, 14px);
+  background: var(--surface-2);
+  color: var(--accent);
+  font-weight: 700;
+}
+.tw-focus-dark {
+  display: inline-block;
+  padding: clamp(3px, .6vw, 8px) clamp(8px, 1.2vw, 16px);
+  border-radius: clamp(8px, 1.5vw, 14px);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ---- 标签行 ---- */
+.tw-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .8vw, 10px);
+  padding: clamp(6px, 1vw, 14px) clamp(12px, 2vw, 22px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: clamp(11px, 1.6vw, 15px);
+  color: var(--text-2);
+  background: var(--surface);
+  margin-bottom: clamp(6px, 1vw, 14px);
+}
+.tw-tag .dot {
+  width: clamp(6px, 1vw, 10px);
+  height: clamp(6px, 1vw, 10px);
+  border-radius: 50%;
+  background: var(--grad);
+  flex-shrink: 0;
+}
+
+/* ---- 卡片 ---- */
+.tw-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(16px, 3vw, 28px);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.tw-card .tw-card-label {
+  font-size: clamp(11px, 1.5vw, 14px);
+  font-weight: 700;
+  color: var(--text-3);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(4px, .6vw, 8px);
+}
+.tw-card .tw-card-title {
+  font-size: clamp(20px, 3.6vw, 32px);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  margin-bottom: clamp(4px, .6vw, 8px);
+  color: var(--text-1);
+}
+.tw-card .tw-card-body {
+  font-size: clamp(13px, 2vw, 17px);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* ---- 卡片辅助色 ---- */
+.tw-card.red { border-left: clamp(4px, .6vw, 6px) solid var(--accent); }
+.tw-card.green { border-left: clamp(4px, .6vw, 6px) solid var(--good); }
+.tw-card.orange { border-left: clamp(4px, .6vw, 6px) solid var(--warn); }
+.tw-card.pink { border-left: clamp(4px, .6vw, 6px) solid var(--accent-2); }
+.tw-card.soft { background: var(--surface-2); }
+.tw-card.grad-bg { background: linear-gradient(135deg, var(--bg-soft), var(--surface)); }
+
+/* ---- 2列网格 ---- */
+.tw-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 2vw, 20px);
+  margin-top: clamp(8px, 1.5vw, 20px);
+}
+
+/* ---- 3列网格 ---- */
+.tw-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: clamp(10px, 1.5vw, 16px);
+  margin-top: clamp(8px, 1.5vw, 20px);
+}
+
+/* ---- 大引用区域 ---- */
+.tw-quote-box {
+  margin-top: clamp(12px, 2vw, 24px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(20px, 4vw, 36px);
+  background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+  box-shadow: var(--shadow);
+}
+.tw-quote {
+  font-size: clamp(22px, 4vw, 36px);
+  line-height: 1.35;
+  font-weight: 750;
+  letter-spacing: -.01em;
+  color: var(--text-1);
+}
+.tw-quote .tw-grad-text {
+  color: var(--accent);
+}
+.tw-quote-source {
+  font-size: clamp(12px, 1.6vw, 16px);
+  color: var(--text-3);
+  margin-top: clamp(6px, 1vw, 14px);
+  font-style: italic;
+}
+
+/* ---- 算账表格 ---- */
+.tw-table {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vw, 12px);
+  margin-top: clamp(8px, 1.5vw, 20px);
+}
+.tw-tr {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1.2fr;
+  gap: clamp(6px, 1vw, 12px);
+  align-items: center;
+  padding: clamp(8px, 1.2vw, 14px) clamp(10px, 2vw, 20px);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.tw-tr.head {
+  background: var(--surface-2);
+  font-weight: 700;
+  color: var(--text-1);
+  font-size: clamp(12px, 1.6vw, 15px);
+  border: none;
+}
+.tw-tr .tw-td {
+  font-size: clamp(12px, 1.8vw, 17px);
+  color: var(--text-2);
+}
+.tw-tr .tw-td.number {
+  font-weight: 800;
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--text-1);
+}
+.tw-tr .tw-td.highlight {
+  color: var(--accent);
+  font-weight: 700;
+}
+.tw-tr.highlight-row {
+  background: linear-gradient(135deg, var(--bg-soft), var(--surface));
+  border-left: clamp(3px, .5vw, 5px) solid var(--accent);
+}
+
+/* ---- 步骤列表 ---- */
+.tw-steps { margin-top: clamp(8px, 1.5vw, 20px); }
+.tw-step {
+  display: flex;
+  gap: clamp(12px, 2vw, 20px);
+  align-items: flex-start;
+  margin: clamp(8px, 1.5vw, 16px) 0;
+}
+.tw-step-num {
+  flex: 0 0 clamp(36px, 6vw, 52px);
+  height: clamp(36px, 6vw, 52px);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 900;
+}
+.tw-step-txt {
+  font-size: clamp(15px, 2.4vw, 22px);
+  line-height: 1.45;
+  font-weight: 650;
+  color: var(--text-1);
+}
+
+/* ---- 居中 ---- */
+.center { text-align: center; }
+.flex-c { display: flex; flex-direction: column; align-items: center; }
+
+/* ---- 标签列表 ---- */
+.tw-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(6px, 1vw, 12px);
+  margin-top: clamp(8px, 1.5vw, 20px);
+}
+.tw-tag-item {
+  padding: clamp(6px, 1vw, 14px) clamp(12px, 2vw, 22px);
+  border-radius: 999px;
+  font-size: clamp(12px, 1.8vw, 16px);
+  font-weight: 600;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.tw-tag-item.accent {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+
+/* ---- 分隔装饰行 ---- */
+.tw-divider {
+  width: 100%;
+  height: clamp(3px, .5vw, 5px);
+  background: var(--grad);
+  border-radius: 2px;
+  margin: clamp(6px, 1vw, 14px) 0;
+}
+
+/* ===== Footer ===== */
+.tw-footer {
+  position: absolute;
+  left: clamp(48px, 8%, 80px);
+  right: clamp(48px, 8%, 80px);
+  bottom: clamp(32px, 5%, 52px);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: clamp(11px, 1.4vw, 13px);
+  color: var(--text-3);
+  pointer-events: none;
+}
+
+/* ===== Cover 特殊样式 ===== */
+.tw-cover-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+.tw-slogan {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--text-2);
+  margin: 0;
+}
+.tw-meta {
+  font-size: clamp(13px, 2vw, 18px);
+  color: var(--text-3);
+  margin-top: clamp(16px, 3vw, 32px);
+  letter-spacing: .12em;
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 1: COVER (无 footer) -->
+  <!-- ============================================================ -->
+  <section class="slide is-active center" data-title="Cover">
+    <div class="tw-cover-wrap">
+      <div class="tw-tag" style="margin-bottom:clamp(16px,3vw,32px);animation-delay:.1s" data-anim="fade-up">
+        <span class="dot"></span>观点评论 · AI Native
+      </div>
+      <h1 class="tw-title" style="font-size:clamp(48px,10vw,90px);max-width:700px;margin-bottom:clamp(12px,2vw,24px);" data-anim="rise-in">
+        最大化 <span class="tw-grad">Token</span> 用量<br>而不是人头数
+      </h1>
+      <p class="tw-slogan" data-anim="fade-up" style="animation-delay:.3s">
+        AI Native 公司构建实战手册
+      </p>
+      <div class="tw-meta" data-anim="fade-up" style="animation-delay:.5s">
+        <span>叶帕奇 · 观点评论</span>
+        <span style="margin:0 clamp(8px,1.5vw,16px)">·</span>
+        <span>2026-07-09</span>
+      </div>
+      <!-- 装饰线 -->
+      <div style="width:clamp(60px,12vw,120px);height:clamp(3px,.5vw,5px);background:var(--grad);border-radius:2px;margin-top:clamp(20px,4vw,40px);animation-delay:.6s" data-anim="fade-up"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 2: 问题 — 开环 vs 闭环 -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Problem">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>问题 · 信息损耗</div>
+    <h2 class="tw-title-md" data-anim="fade-up" style="margin-bottom:clamp(4px,.8vw,12px)">你的公司还在<br><span class="tw-focus-dark">开环</span>运行吗？</h2>
+    <div data-anim="fade-up" style="animation-delay:.15s">
+      <p class="tw-body">客户吐槽 → 客服日报 → 产品会议 → 需求文档 → 排期评审 → 开发 → 测试 → 上线</p>
+      <p class="tw-body" style="font-weight:600;color:var(--accent)">每一层都是信息损耗。上线时，客户可能已经换了别家。</p>
+    </div>
+    <div class="tw-grid-2" data-anim="fade-up" style="animation-delay:.3s">
+      <div class="tw-card soft" style="text-align:center;padding:clamp(16px,3vw,30px)">
+        <div style="font-size:clamp(40px,8vw,72px);font-weight:900;color:var(--bad);margin-bottom:clamp(4px,.6vw,8px)">❌</div>
+        <div style="font-weight:700;font-size:clamp(16px,2.5vw,22px);margin-bottom:clamp(4px,.6vw,8px)">开环</div>
+        <div class="tw-dim">做决策 → 执行 → 不测量</div>
+      </div>
+      <div class="tw-card" style="text-align:center;padding:clamp(16px,3vw,30px)">
+        <div style="font-size:clamp(40px,8vw,72px);font-weight:900;color:var(--good);margin-bottom:clamp(4px,.6vw,8px)">✅</div>
+        <div style="font-weight:700;font-size:clamp(16px,2.5vw,22px);margin-bottom:clamp(4px,.6vw,8px)">闭环</div>
+        <div class="tw-dim">AI 成为公司运行的操作系统</div>
+      </div>
+    </div>
+    <div class="tw-quote-box" data-anim="fade-up" style="animation-delay:.45s">
+      <div class="tw-quote" style="font-size:clamp(18px,3.2vw,28px)">
+        "公司速度只和信息流速一样快。<br>每去掉一层人际传递，就是一次直接的速度增益。"
+      </div>
+      <div class="tw-quote-source">— Diana Hu, YC Partner</div>
+    </div>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>02 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 3: 案例一 — 工程排期 10x -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Case 1">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>案例一 · 工程排期</div>
+    <h2 class="tw-title-md" data-anim="fade-up">从 <span class="tw-grad">两周</span> 到 <span class="tw-grad">两天</span></h2>
+    <p class="tw-body" data-anim="fade-up" style="animation-delay:.1s;margin-bottom:0">
+      YC 投资团队实验：Agent 接入所有数据源，自动分析交付，提出 sprint 计划。
+    </p>
+    <div style="display:flex;gap:clamp(12px,2vw,20px);margin-top:clamp(10px,2vw,22px);animation-delay:.2s" data-anim="fade-up">
+      <div class="tw-card red" style="flex:1;text-align:center">
+        <div class="tw-dim tw-card-label">Old Way</div>
+        <div style="font-size:clamp(28px,5vw,46px);font-weight:900;color:var(--text-3)">2 周</div>
+        <div class="tw-dim">产品读反馈 → 排期会 → 讨价还价</div>
+      </div>
+      <div class="tw-card green" style="flex:1;text-align:center">
+        <div class="tw-dim tw-card-label">New Way</div>
+        <div style="font-size:clamp(28px,5vw,46px);font-weight:900;color:var(--good)">2 天</div>
+        <div class="tw-dim">智能层跑完分析 → 人类最终确认</div>
+      </div>
+    </div>
+    <div style="margin-top:clamp(8px,1.5vw,18px);text-align:center;font-size:clamp(24px,5vw,44px);font-weight:900;color:var(--accent);" data-anim="counter-up" data-to="10">0x</div>
+    <p class="tw-dim" style="text-align:center;margin-top:clamp(2px,.4vw,6px);font-size:clamp(12px,1.8vw,16px)">产出提升 ~10x</p>
+    <div class="tw-quote-box" data-anim="fade-up" style="animation-delay:.4s;margin-top:clamp(8px,1.5vw,18px)">
+      <div class="tw-quote" style="font-size:clamp(16px,2.6vw,22px)">
+        "像对待员工一样，提供给模型尽可能多的上下文。"
+      </div>
+      <div class="tw-quote-source">— Diana Hu</div>
+    </div>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>03 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 4: 案例二 — StrongDM 软件工厂 -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Case 2">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>案例二 · 软件工厂</div>
+    <h2 class="tw-title-md" data-anim="fade-up">仓库里 <span class="tw-grad">没有一行</span> 手写代码</h2>
+    <p class="tw-body" data-anim="fade-up" style="animation-delay:.1s">StrongDM 的激进决定：人类写 spec + 测试，AI 写实现。</p>
+    <div class="tw-grid-2" data-anim="fade-up" style="animation-delay:.2s">
+      <div class="tw-card" style="text-align:center;padding:clamp(14px,2.5vw,24px)">
+        <div style="font-size:clamp(20px,3vw,28px);font-weight:800;margin-bottom:clamp(4px,.6vw,8px)">🧑‍💻 人类</div>
+        <div class="tw-card-body">写需求规格<br>写测试用例<br>定义成功标准</div>
+      </div>
+      <div class="tw-card" style="text-align:center;padding:clamp(14px,2.5vw,24px)">
+        <div style="font-size:clamp(20px,3vw,28px);font-weight:800;margin-bottom:clamp(4px,.6vw,8px)">🤖 AI</div>
+        <div class="tw-card-body">生成实现代码<br>迭代到测试全过<br>产出交付物</div>
+      </div>
+    </div>
+    <div class="tw-quote-box" data-anim="fade-up" style="animation-delay:.35s">
+      <div class="tw-quote" style="font-size:clamp(18px,3vw,28px)">
+        TDD 进化版：<span style="color:var(--accent);font-weight:800">「人类写测试，AI 写实现」</span>
+      </div>
+      <div class="tw-quote-source" style="margin-top:clamp(4px,.6vw,8px)">规范与测试才是核心资产 · 怎么实现交给智能层</div>
+    </div>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>04 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 5: 案例三 — Jack Dorsey 三种角色 -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Case 3">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>案例三 · 组织变革</div>
+    <h2 class="tw-title-md" data-anim="fade-up">旧组织架构<br><span class="tw-grad">已经死了</span></h2>
+    <p class="tw-body" data-anim="fade-up" style="animation-delay:.1s">Jack Dorsey 重新定义员工的三种角色：</p>
+    <div class="tw-grid-3" data-anim="fade-up" style="animation-delay:.2s">
+      <div class="tw-card" style="text-align:center;padding:clamp(10px,2vw,20px)">
+        <div style="font-size:clamp(24px,4vw,38px);margin-bottom:clamp(4px,.6vw,8px);font-weight:900">IC</div>
+        <div class="tw-card-body">个体贡献者<br>亲手建造运营</div>
+      </div>
+      <div class="tw-card" style="text-align:center;padding:clamp(10px,2vw,20px)">
+        <div style="font-size:clamp(24px,4vw,38px);margin-bottom:clamp(4px,.6vw,8px);font-weight:900">DRI</div>
+        <div class="tw-card-body">直接责任人<br>一个人对结果负责</div>
+      </div>
+      <div class="tw-card pink" style="text-align:center;padding:clamp(10px,2vw,20px)">
+        <div style="font-size:clamp(24px,4vw,38px);margin-bottom:clamp(4px,.6vw,8px);font-weight:900">AI<br>Founder</div>
+        <div class="tw-card-body">亲自用 AI 工具<br>不能外包给 CTO</div>
+      </div>
+    </div>
+    <div class="tw-quote-box" data-anim="fade-up" style="animation-delay:.4s">
+      <div class="tw-quote" style="font-size:clamp(17px,2.8vw,24px)">
+        "以前靠「信息路由」吃饭的中层经理，<br><span style="color:var(--accent);font-weight:800">已经被智能层取代了</span>。"
+      </div>
+    </div>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>05 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 6: 核心论点 — Token 最大化 vs 人头最大化 -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Core Thesis">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>核心论点</div>
+    <h2 class="tw-title-md" data-anim="fade-up"><span class="tw-grad">Token</span> 最大化<br>vs 人头最大化</h2>
+    <div class="tw-quote-box" data-anim="fade-up" style="animation-delay:.1s">
+      <div class="tw-quote" style="font-size:clamp(20px,3.6vw,32px)">
+        "最大化 token 用量，而不是人头数，<br>将是关键的转变。"
+      </div>
+      <div class="tw-quote-source" style="font-size:clamp(13px,1.8vw,16px)">— Diana Hu, YC Partner</div>
+    </div>
+    <div style="margin-top:clamp(10px,2vw,22px);animation-delay:.25s" data-anim="fade-up">
+      <div style="background:var(--surface-2);border-radius:var(--radius);padding:clamp(14px,2.5vw,26px);border:1px solid var(--border);margin-bottom:clamp(6px,1vw,12px)">
+        <div style="font-weight:700;font-size:clamp(16px,2.8vw,24px);color:var(--text-1)">👉 看 API 账单，别看员工数</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:var(--radius);padding:clamp(14px,2.5vw,26px);border:1px solid var(--border)">
+        <div style="font-weight:700;font-size:clamp(16px,2.8vw,24px);color:var(--text-1)">👉 投入产出比的基准已经彻底变了</div>
+      </div>
+    </div>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>06 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 7: 算账对比 -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Cost Comparison">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>算账 · Token 成本 vs 人力成本</div>
+    <h2 class="tw-title-md" data-anim="fade-up">月薪 <span class="tw-grad">3-5万</span> 的人<br>vs 几分之一的 API 账单</h2>
+    <div class="tw-table" data-anim="fade-up" style="animation-delay:.15s">
+      <div class="tw-tr head">
+        <div class="tw-td">项目</div>
+        <div class="tw-td">传统人力</div>
+        <div class="tw-td">Token 方案</div>
+      </div>
+      <div class="tw-tr">
+        <div class="tw-td">工程师月薪</div>
+        <div class="tw-td number">¥35,000</div>
+        <div class="tw-td highlight">¥2,000~5,000</div>
+      </div>
+      <div class="tw-tr">
+        <div class="tw-td">排期效率</div>
+        <div class="tw-td">2 周</div>
+        <div class="tw-td highlight">2 天</div>
+      </div>
+      <div class="tw-tr">
+        <div class="tw-td">信息损耗</div>
+        <div class="tw-td">多层传递</div>
+        <div class="tw-td highlight">零损耗</div>
+      </div>
+      <div class="tw-tr highlight-row">
+        <div class="tw-td" style="font-weight:700">投入产出比</div>
+        <div class="tw-td number">1x</div>
+        <div class="tw-td" style="font-weight:800;color:var(--accent);font-size:clamp(18px,3vw,28px)">~10x</div>
+      </div>
+    </div>
+    <p class="tw-body" style="margin-top:clamp(6px,1vw,16px);font-size:clamp(12px,1.8vw,16px);color:var(--text-3);text-align:center;animation-delay:.3s" data-anim="fade-up">
+      当然不是 1:1 替换 —— 人还要做架构决策和把控。<br>但基准已经彻底变了。
+    </p>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>07 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 8: 行动号召 — 三个问题 -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="Call to Action">
+      <div class="tw-tag" data-anim="fade-up"><span class="dot"></span>现在就问自己</div>
+    <h2 class="tw-title-md" data-anim="fade-up">三个问题<br>判断你在哪</h2>
+    <div class="tw-steps" data-anim="stagger-list" data-anim-target>
+      <div class="tw-step" style="animation-delay:.1s">
+        <div class="tw-step-num">1</div>
+        <div class="tw-step-txt">
+          <span style="font-weight:800">开环还是闭环？</span><br>
+          <span class="tw-dim" style="font-weight:400;font-size:clamp(12px,1.8vw,16px)">做完有反馈回路吗？还是做出了就不管了？</span>
+        </div>
+      </div>
+      <div class="tw-step" style="animation-delay:.2s">
+        <div class="tw-step-num">2</div>
+        <div class="tw-step-txt">
+          <span style="font-weight:800">Agent 能读到多少上下文？</span><br>
+          <span class="tw-dim" style="font-weight:400;font-size:clamp(12px,1.8vw,16px)">信息在它可触达的地方？还是某人的微信私聊里？</span>
+        </div>
+      </div>
+      <div class="tw-step" style="animation-delay:.3s">
+        <div class="tw-step-num">3</div>
+        <div class="tw-step-txt">
+          <span style="font-weight:800">人头还是 Token？</span><br>
+          <span class="tw-dim" style="font-weight:400;font-size:clamp(12px,1.8vw,16px)">投入产出比的基准更新了吗？</span>
+        </div>
+      </div>
+    </div>
+    <div class="tw-divider" data-anim="fade-up" style="animation-delay:.4s"></div>
+    <p class="tw-body" style="text-align:center;margin-top:clamp(4px,.6vw,10px);font-weight:700;font-size:clamp(16px,2.8vw,26px);color:var(--accent);animation-delay:.45s" data-anim="fade-up">
+      能回答这三个问题的人，<br>已经走在 90% 的公司前面
+    </p>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>08 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 9: CTA -->
+  <!-- ============================================================ -->
+  <section class="slide" data-title="CTA">
+      <div class="tw-tag" data-anim="fade-up" style="margin-bottom:clamp(16px,3vw,32px)"><span class="dot"></span>开始行动</div>
+      <h1 class="tw-title" style="font-size:clamp(42px,9vw,78px);max-width:700px" data-anim="rise-in">
+        现在就是<br><span class="tw-grad">最好的时机</span>
+      </h1>
+      <p class="tw-sub" style="max-width:600px;margin-top:clamp(8px,1.5vw,20px);margin-bottom:clamp(16px,3vw,32px);animation-delay:.2s" data-anim="fade-up">
+        AI Native 不是"用 AI"，<br>而是"让 AI 变成公司的运行方式"。
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(8px,1.2vw,14px);margin-bottom:clamp(20px,4vw,44px)" data-anim="stagger-list" data-anim-target>
+        <span class="tw-tag-item accent">🚀 开始动手</span>
+        <span class="tw-tag-item">⚡ 拥抱闭环</span>
+        <span class="tw-tag-item">📈 Token 思维</span>
+      </div>
+      <p class="tw-dim" style="font-size:clamp(11px,1.6vw,14px);max-width:500px;animation-delay:.35s" data-anim="fade-up">
+        YC Partner Diana Hu 说：早期创始人有巨大优势——<br>没有遗留系统，没有旧的层级。可以从第一天就设计成 AI-native。
+      </p>
+    </div>
+    <div class="tw-footer"><span>叶帕奇 · 观点评论</span><span>09 / 09</span><span>2026-07-09</span></div>
+  </section>
+
+</div>
+<script src="../../assets/runtime.js"></script>
+<script src="../../assets/animations/fx-runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const { globMatch, isChatRoute, extractBase64FromContent, extractFromChatResponse, parseArgs } = require('./generate-image-lib');
+
+const BASE_URL = (process.env.OPENAI_BASE_URL || 'http://localhost:8090/v1').replace(/\/+$/, '');
+const API_KEY = process.env.OPENAI_API_KEY;
+const DEFAULT_MODEL = process.env.IMAGE_GEN_MODEL;
+const OUTPUT_DIR = process.env.IMAGE_GEN_OUTPUT_DIR || path.resolve(process.cwd(), 'output');
+const CHAT_MODELS_ENV = process.env.IMAGE_GEN_CHAT_MODELS || '';
+
+const CHAT_MODEL_PATTERNS = [
+  'gemini-*-image*',
+  'gemini-*-flash-image*',
+];
+
+const envChatPatterns = CHAT_MODELS_ENV.split(',').map(s => s.trim()).filter(Boolean);
+const allChatPatterns = [...CHAT_MODEL_PATTERNS, ...envChatPatterns];
+
+function log(msg) { process.stderr.write('[image-gen] ' + msg + '\n'); }
+
+function bodyJson(data) {
+  return Buffer.from(JSON.stringify(data), 'utf-8');
+}
+
+async function requestImagesGenerations(model, prompt, size) {
+  const resp = await fetch(`${BASE_URL}/images/generations`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+    body: bodyJson({ model, prompt, n: 1, size, response_format: 'b64_json' }),
+  });
+  const body = await resp.text();
+  return { status: resp.status, body };
+}
+
+async function requestChatCompletions(model, prompt, size) {
+  const resp = await fetch(`${BASE_URL}/chat/completions`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+    body: bodyJson({
+      model,
+      messages: [{ role: 'user', content: prompt }],
+      n: 1,
+      ...(globMatch(model, 'gemini-*') ? {} : { size }),
+    }),
+  });
+  const body = await resp.text();
+  return { status: resp.status, body };
+}
+
+async function main() {
+  const { prompt, filename, model, forceChat, size: sizeOpt } = parseArgs(process.argv.slice(2), DEFAULT_MODEL);
+  const size = sizeOpt || '1024x1024';
+
+  if (!prompt) {
+    log('Usage: generate-image "prompt" [filename] [-m|--model MODEL] [--chat-model MODEL] [-s|--size WxH]');
+    log('Env: OPENAI_API_KEY (required), IMAGE_GEN_MODEL, OPENAI_BASE_URL, IMAGE_GEN_OUTPUT_DIR, IMAGE_GEN_CHAT_MODELS');
+    process.exit(0);
+  }
+  if (!API_KEY) { log('ERROR: OPENAI_API_KEY not set'); process.exit(1); }
+  if (!model) { log('ERROR: No model. Set IMAGE_GEN_MODEL or pass -m/--model'); process.exit(1); }
+
+  log(`Model: ${model}`);
+  log(`Size: ${size}`);
+  log(`Prompt: ${prompt.slice(0, 80)}${prompt.length > 80 ? '...' : ''}`);
+
+  const useChat = forceChat || isChatRoute(model, allChatPatterns);
+  let resp;
+  let fromFallback = false;
+
+  if (useChat) {
+    log('Route: /v1/chat/completions');
+    resp = await requestChatCompletions(model, prompt, size);
+  } else {
+    log('Route: /v1/images/generations');
+    resp = await requestImagesGenerations(model, prompt, size);
+    if (resp.status === 400 || resp.status === 503) {
+      log(`Got ${resp.status}, retrying via /v1/chat/completions (fallback)...`);
+      resp = await requestChatCompletions(model, prompt, size);
+      fromFallback = true;
+    }
+  }
+
+  if (resp.status !== 200) {
+    log(`API Error (${resp.status}): ${resp.body.slice(0, 500)}`);
+    process.exit(1);
+  }
+
+  let imgBuf;
+
+  if (fromFallback || useChat) {
+    const data = JSON.parse(resp.body);
+    const b64 = extractFromChatResponse(data);
+    if (b64) {
+      imgBuf = Buffer.from(b64, 'base64');
+    } else {
+      log('No image data in chat response. Body: ' + JSON.stringify(data).slice(0, 500));
+      process.exit(1);
+    }
+  } else {
+    const data = JSON.parse(resp.body);
+    if (data.data?.[0]?.b64_json) {
+      imgBuf = Buffer.from(data.data[0].b64_json, 'base64');
+    } else if (data.data?.[0]?.url) {
+      log('Response returned URL instead of b64_json, downloading...');
+      imgBuf = Buffer.from(await (await fetch(data.data[0].url)).arrayBuffer());
+    } else {
+      log('No image data in response. Body: ' + JSON.stringify(data).slice(0, 500));
+      process.exit(1);
+    }
+  }
+
+  let outPath;
+  if (filename) {
+    outPath = path.isAbsolute(filename) ? filename : path.join(OUTPUT_DIR, filename);
+  } else {
+    outPath = path.join(OUTPUT_DIR, `image-${Date.now()}.png`);
+  }
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+  fs.writeFileSync(outPath, imgBuf);
+  log(`Saved: ${outPath}`);
+  console.log('MEDIA:' + outPath);
+}
+
+main().catch(e => { log('Fatal: ' + e.message); process.exit(1); });
