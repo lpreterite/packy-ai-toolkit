@@ -252,7 +252,7 @@ exec({
 | 案例 | 同上 wx-newspic-sop review 任务 |
 | 时间 | 2026-06-24 |
 | 现象 | subagent 尝试读取 coding-sop SKILL.md 找解决方案 → 路径错误，读到其他 SKILL.md |
-| 根因 | coding-sop 当时存放在 `~/Documents/Works/skills/coding-sop/`（2026-08 起随「帕奇的AI工具包」维护于 `pachi-ai-toolkit/skills/coding-sop/`），但 subagent 的工作目录是 `~/.openclaw/agents/.../workspace`，通过 AGENTS.md 引用路径失效 |
+| 根因 | coding-sop 当时存放在 `~/Documents/Works/skills/coding-sop/`（2026-08 起随「帕奇的AI工具包」维护于 `packy-ai-toolkit/skills/coding-sop/`），但 subagent 的工作目录是 `~/.openclaw/agents/.../workspace`，通过 AGENTS.md 引用路径失效 |
 | 规避 | 确保 coding-sop 已通过 `skill_workshop apply` 安装到 OpenClaw skills 目录 |
 
 ### 场景 3：ACP 会话中注入敏感信息

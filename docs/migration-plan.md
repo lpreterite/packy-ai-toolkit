@@ -1,8 +1,8 @@
 # 「帕奇的AI工具包」单仓库整合方案
 
-> 目标：把 `~/Documents/Works/skills/` 下的 6 个独立技能仓库（coding-sop / image-gen / remove-bg / skill-optimizer / topic-engine / wx-newspic-sop）整合进一个名为 **pachi-ai-toolkit**（中文品牌：**帕奇的AI工具包**）的 GitHub 单仓库，统一用 `npx skills`（vercel-labs/skills）发现、安装和维护。
+> 目标：把 `~/Documents/Works/skills/` 下的 6 个独立技能仓库（coding-sop / image-gen / remove-bg / skill-optimizer / topic-engine / wx-newspic-sop）整合进一个名为 **packy-ai-toolkit**（中文品牌：**帕奇的AI工具包**）的 GitHub 单仓库，统一用 `npx skills`（vercel-labs/skills）发现、安装和维护。
 >
-> 已确认决策：仓库 `lpreterite/pachi-ai-toolkit` ｜ 平面结构 `skills/<name>/` ｜ 直接复制文件、干净重建（旧仓库冻结归档，不保留 git 历史）｜ 本次范围仅这 6 个技能。
+> 已确认决策：仓库 `lpreterite/packy-ai-toolkit` ｜ 平面结构 `skills/<name>/` ｜ 直接复制文件、干净重建（旧仓库冻结归档，不保留 git 历史）｜ 本次范围仅这 6 个技能。
 >
 > **执行顺序调整（用户 2026-02 确认）**：skill-optimizer 的迁移**整体放到最后一阶段**，迁移前必须先做「本机已安装拷贝 vs 仓库版本」的版本对比，确认无误后再进行复制与换软链。
 
@@ -26,7 +26,7 @@
 ## 二、目标仓库结构（平面结构）
 
 ```
-pachi-ai-toolkit/                          # GitHub: lpreterite/pachi-ai-toolkit
+packy-ai-toolkit/                          # GitHub: lpreterite/packy-ai-toolkit
 ├── README.md                              # 「帕奇的AI工具包」品牌页：技能总表 + 安装 + 贡献入口
 ├── LICENSE                                # MIT（作者：叶帕奇，统一一份即可）
 ├── .gitignore                             # 合并各仓库忽略规则
@@ -75,7 +75,7 @@ pachi-ai-toolkit/                          # GitHub: lpreterite/pachi-ai-toolkit
 | image-gen（方案 A，推荐） | `skills/image-gen/` 整体 + 根 package.json | skill → `skills/image-gen/SKILL.md`；CLI → `tools/image-gen/`（package.json/bin/lib/tests/README） | ①`package.json` 的 bin 改 `{"generate-image": "./generate-image"}`；②测试路径改 `node --test *.test.js`；③README 安装命令 URL 改新仓库；④`repository` 字段迁到新仓库 |
 | image-gen（方案 B，备选） | 同上 | `skills/image-gen/` 整体搬入（含 CLI/lib/tests/package.json） | ①包内放 package.json（`npm i -g ./skills/image-gen`），npx skills 安装时多余文件无害；适合“少动结构” |
 | remove-bg | `skills/remove-bg/` | `skills/remove-bg/` 原样 | README 中的软链命令 `ln -s ~/Documents/Works/skills/remove-bg/skills/remove-bg …` → 指向新仓库 `skills/remove-bg` |
-| skill-optimizer（**后置**） | `skills/skill-optimizer/` | `skills/skill-optimizer/` 原样 | ①迁移整体放到最后一阶段；②先做版本对比：`diff -r ~/.agents/skills/skill-optimizer vs 仓库 skills/skill-optimizer`，确认一致（或经用户确认差异）后再复制；③README 安装命令改 `npx skills add lpreterite/pachi-ai-toolkit`（或单选 URL）；④`~/.agents/skills/skill-optimizer` 真实目录先备份再改软链 |
+| skill-optimizer（**后置**） | `skills/skill-optimizer/` | `skills/skill-optimizer/` 原样 | ①迁移整体放到最后一阶段；②先做版本对比：`diff -r ~/.agents/skills/skill-optimizer vs 仓库 skills/skill-optimizer`，确认一致（或经用户确认差异）后再复制；③README 安装命令改 `npx skills add lpreterite/packy-ai-toolkit`（或单选 URL）；④`~/.agents/skills/skill-optimizer` 真实目录先备份再改软链 |
 | topic-engine | 根 SKILL.md + resources/ | `skills/topic-engine/{SKILL.md,resources/}` | ①README 软链命令改指新路径；②`~/.agents/skills/topic-engine` 软链改指 `skills/topic-engine`；③验证 resources 相对引用仍然有效 |
 | wx-newspic-sop | `skills/wx-newspic-sop/` | `skills/wx-newspic-sop/` 原样 | ①`dist/` 纳入 git（先复制）；②README 的 `npx skill` URL 改新仓库；③SKILL.md 中相对仓库根的 `--file skills/wx-newspic-sop/lobster-flows/...` 在新仓库**保持不变**（路径层次恰好一致）；④ `~/.openclaw/skills/html-ppt` 等运行期路径不动 |
 
@@ -84,26 +84,26 @@ pachi-ai-toolkit/                          # GitHub: lpreterite/pachi-ai-toolkit
 ## 四、品牌与安装命令
 
 ### 品牌
-- GitHub 仓库：`lpreterite/pachi-ai-toolkit`
+- GitHub 仓库：`lpreterite/packy-ai-toolkit`
 - 仓库 description：`帕奇的AI工具包 · Pachi's AI Toolkit — 可复用 Agent Skills 集合`
 - README 首页给出中文品牌头 + 技能总表（emoji、名称、触发词、依赖、说明）。
 
 ### 安装（npx skills，vercel-labs）
 ```bash
 # 预览仓库里有哪些技能
-npx skills add lpreterite/pachi-ai-toolkit --list
+npx skills add lpreterite/packy-ai-toolkit --list
 
 # 全量安装到检测到的所有 Agent（claude/codex/openclaw/...）
-npx skills add lpreterite/pachi-ai-toolkit
+npx skills add lpreterite/packy-ai-toolkit
 
 # 只装某一个技能
-npx skills add https://github.com/lpreterite/pachi-ai-toolkit/tree/main/skills/topic-engine
+npx skills add https://github.com/lpreterite/packy-ai-toolkit/tree/main/skills/topic-engine
 ```
 
 ### 兼容旧安装方式
 ```bash
 # npx skill（单数，codebuddy 系通用安装器，image-gen/wx-newspic-sop 现用）
-SKILL_BASE_URL=https://github.com/lpreterite/pachi-ai-toolkit/tree/main npx skill skills/image-gen
+SKILL_BASE_URL=https://github.com/lpreterite/packy-ai-toolkit/tree/main npx skill skills/image-gen
 
 # 本地开发软链（本机多 Agent 场景）
 node scripts/link.mjs --dry-run   # 预览
@@ -132,7 +132,7 @@ node scripts/unlink.mjs
 | coding-sop、wx-newspic-sop 有未提交改动 / 未跟踪文件（dist/） | 第 0 阶段先 git commit 或复制快照，确保迁移源是完整状态 |
 | SKILL.md 内硬编码旧绝对路径（coding-sop、topic-engine README、remove-bg README、wx-newspic-sop 的公众号业务路径） | 全局 grep `Works/skills` 逐条改为新仓库路径；业务路径（MyNodes 下的公众号目录）**不改** |
 | npx skills 会把仓库根 SKILL.md 也当技能 | 根目录只放 README，不放 SKILL.md |
-| 旧仓库冻结后，GitHub 老链接（README/徽章）失效 | 各技能 README 内容并入新仓库 README；旧仓库 description 标注「已迁移至 pachi-ai-toolkit」并可 Archive |
+| 旧仓库冻结后，GitHub 老链接（README/徽章）失效 | 各技能 README 内容并入新仓库 README；旧仓库 description 标注「已迁移至 packy-ai-toolkit」并可 Archive |
 | npm 包 `@packy-tang/image-gen` 的 repository 字段指旧仓库 | 并入后同步更新，保持 npm 与 GitHub 一致 |
 
 ---
@@ -153,7 +153,7 @@ cp -R ~/.agents/skills/skill-optimizer ~/Documents/Works/tmp/skill-optimizer-bac
 
 **Phase 1 建仓骨架**
 ```bash
-mkdir -p ~/Documents/Works/pachi-ai-toolkit && cd ~/Documents/Works/pachi-ai-toolkit
+mkdir -p ~/Documents/Works/skills/packy-ai-toolkit && cd ~/Documents/Works/skills/packy-ai-toolkit
 git init && git branch -M main
 # 创建 README.md / LICENSE / .gitignore / docs/ / scripts/（内容见第五节）
 ```
@@ -185,10 +185,10 @@ cd tools/image-gen && npm test                       # image-gen 单测
 **Phase 5 提交并发布（skill-optimizer 尚未迁入）**
 ```bash
 git add -A && git commit -m "feat: 帕奇的AI工具包 · aggregate 5 skills (skill-optimizer 待 Phase 6)"
-gh repo create lpreterite/pachi-ai-toolkit --public --source . --push
+gh repo create lpreterite/packy-ai-toolkit --public --source . --push
 # 云验证（此时应为 5 个；第 6 个在 Phase 6 迁入后再验证）
-npx skills add lpreterite/pachi-ai-toolkit --list
-npx skills add https://github.com/lpreterite/pachi-ai-toolkit/tree/main/skills/topic-engine --dry-run
+npx skills add lpreterite/packy-ai-toolkit --list
+npx skills add https://github.com/lpreterite/packy-ai-toolkit/tree/main/skills/topic-engine --dry-run
 # 旧仓库 GitHub 上逐个 Archive（可选，建议等 Phase 6 完成后再归档 skill-optimizer）
 ```
 
@@ -206,7 +206,7 @@ node scripts/verify.mjs
 mv ~/.agents/skills/skill-optimizer ~/Documents/Works/tmp/skill-optimizer-pre-migration
 ln -s "$(pwd)/skills/skill-optimizer" ~/.agents/skills/skill-optimizer
 # ⑤ 提交并推送
-npx skills add lpreterite/pachi-ai-toolkit --list    # 此时应恰好列出 6 个
+npx skills add lpreterite/packy-ai-toolkit --list    # 此时应恰好列出 6 个
 git add -A && git commit -m "feat: 迁入 skill-optimizer（版本对比确认一致）" && git push
 ```
 
@@ -221,8 +221,8 @@ git add -A && git commit -m "feat: 迁入 skill-optimizer（版本对比确认�
 
 ## 八、验收清单（Definition of Done）
 
-- [ ] GitHub 存在 `lpreterite/pachi-ai-toolkit`，README 显示「帕奇的AI工具包」品牌与 6 技能总表
-- [ ] `npx skills add lpreterite/pachi-ai-toolkit --list` 恰好列出 6 个技能，且单个技能 URL 可装
+- [ ] GitHub 存在 `lpreterite/packy-ai-toolkit`，README 显示「帕奇的AI工具包」品牌与 6 技能总表
+- [ ] `npx skills add lpreterite/packy-ai-toolkit --list` 恰好列出 6 个技能，且单个技能 URL 可装
 - [ ] `node scripts/verify.mjs` 零报错；`tools/image-gen` 的 `npm test` 通过
 - [ ] skill-optimizer：迁移前版本对比（已安装拷贝 vs 仓库）已完成并经确认，差异（若有）已说明
 - [ ] 3 个 Agent 技能目录中的 6 条软链均指向新仓库，重装/重载后技能可被触发

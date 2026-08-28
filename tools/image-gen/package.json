@@ -7,6 +7,6 @@
   "scripts": { "test": "node --test *.test.js" },
   "publishConfig": { "access": "public" },
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/lpreterite/pachi-ai-toolkit.git" },
+  "repository": { "type": "git", "url": "git+https://github.com/lpreterite/packy-ai-toolkit.git" },
   "engines": { "node": ">=18" }
 }

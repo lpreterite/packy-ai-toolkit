@@ -7,7 +7,7 @@
 ### 方式一：npx skill（通用技能安装器）
 
 ```bash
-SKILL_BASE_URL=https://github.com/lpreterite/pachi-ai-toolkit/tree/main npx skill skills/image-gen
+SKILL_BASE_URL=https://github.com/lpreterite/packy-ai-toolkit/tree/main npx skill skills/image-gen
 ```
 
 默认安装到 `.codebuddy/skills/image-gen/`。`npx skill` 是通用工具，不绑定特定 agent 平台。
@@ -15,7 +15,7 @@ SKILL_BASE_URL=https://github.com/lpreterite/pachi-ai-toolkit/tree/main npx skil
 ### 方式二：OpenClaw 集成
 
 ```bash
-# 在 pachi-ai-toolkit 仓库根目录执行（技能本体位于该仓库 skills/image-gen/）
+# 在 packy-ai-toolkit 仓库根目录执行（技能本体位于该仓库 skills/image-gen/）
 ln -s $(pwd)/skills/image-gen ~/.openclaw/skills/image-gen
 ```
 
@@ -32,7 +32,7 @@ generate-image "一只猫"
 npx -y @packy-tang/image-gen "一只猫"
 ```
 
-> 技能本体随「帕奇的AI工具包」（lpreterite/pachi-ai-toolkit）维护：\`npx skills add https://github.com/lpreterite/pachi-ai-toolkit/tree/main/skills/image-gen\`
+> 技能本体随「帕奇的AI工具包」（lpreterite/packy-ai-toolkit）维护：\`npx skills add https://github.com/lpreterite/packy-ai-toolkit/tree/main/skills/image-gen\`
 
 ## 用法
 
