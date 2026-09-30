@@ -5,6 +5,7 @@ description: 波塔斯基专用编码任务标准操作流程（SOP）。通过 
 metadata:
   openclaw:
     emoji: "🔧"
+disable-model-invocation: true
 ---
 
 # 编码 SOP (Standard Operating Procedure)

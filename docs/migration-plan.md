@@ -5,6 +5,8 @@
 > 已确认决策：仓库 `lpreterite/packy-ai-toolkit` ｜ 平面结构 `skills/<name>/` ｜ 直接复制文件、干净重建（旧仓库冻结归档，不保留 git 历史）｜ 本次范围仅这 6 个技能。
 >
 > **执行顺序调整（用户 2026-02 确认）**：skill-optimizer 的迁移**整体放到最后一阶段**，迁移前必须先做「本机已安装拷贝 vs 仓库版本」的版本对比，确认无误后再进行复制与换软链。
+>
+> **执行记录（已归档，与实际迁移一致）**：迁移于 2026-09 完成。实际结果与本文档初稿有以下偏差——① image-gen 采用**方案 B**（工具随技能目录：CLI/lib/tests/package.json 全部留在 `skills/image-gen/`，不设 `tools/`，用户明确要求）；② remove-bg **未迁入**本仓库，独立为 `lpreterite/rembg-mcp-server`；③ skill-optimizer **未迁入**本仓库，保留独立仓库 `lpreterite/skill-optimizer`。本仓库最终收录 4 技能：coding-sop / image-gen / topic-engine / wx-newspic-sop。Agent 软链统一指向本仓库或对应独立仓库，`~/.trae-cn/skills`、`~/.config/opencode/skills` 亦已同步为软链。
 
 ---
 

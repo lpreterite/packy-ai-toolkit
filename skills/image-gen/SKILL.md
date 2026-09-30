@@ -121,4 +121,11 @@ OPENAI_BASE_URL=https://api.siliconflow.cn/v1 generate-image "猫"
 
 ## 引用文件
 
-- `generate-image` — CLI 入口（可执行脚本）
+CLI 与库随本技能目录一起分发（方案 B 结构，与 SKILL.md 同目录）：
+
+- `generate-image` — CLI 入口（可执行脚本，bin 名 `generate-image`）
+- `generate-image-lib.js` — 核心实现库
+- `generate-image.test.js` / `generate-image-cli.test.js` — 单元与 CLI E2E 测试
+- `package.json` — npm 包定义（`npm i -g ./skills/image-gen` 或在本目录 `npm link` 可全局安装 bin）
+
+若 `generate-image` 不在 PATH 中，可退化为相对路径调用：`./generate-image "你的 prompt" output.png`。

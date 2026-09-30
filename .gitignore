@@ -6,3 +6,4 @@ output/
 .skill/
 __pycache__/
 *.pyc
+*.ses

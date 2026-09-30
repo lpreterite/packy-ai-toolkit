@@ -8,7 +8,7 @@
     "link": "node scripts/link.mjs",
     "link:dry": "node scripts/link.mjs --dry-run",
     "unlink": "node scripts/unlink.mjs",
-    "test": "npm --prefix tools/image-gen test"
+    "test": "npm --prefix skills/image-gen test"
   },
   "license": "MIT"
 }
