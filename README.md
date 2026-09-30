@@ -7,11 +7,11 @@
 | 技能 | 图标 | 触发词 | 说明 | 依赖 |
 |---|---|---|---|---|
 | `coding-sop` | 🔧 | 编码任务、ACP 调用、项目技术执行 | 编码任务标准操作流程：ACP → exec pty 兜底，harness 选择与安全约束 | 外部编码 harness（Claude Code / Codex / OpenCode） |
-| `image-gen` | 🎨 | 生图、出图、出封面、配图 | 通过 OpenAI 兼容接口生图，双路线（images/generations + chat/completions）适配 Gemini 等 | CLI 随技能目录分发：`npm i -g ./skills/image-gen` |
 | `topic-engine` | 📡 | 找选题、挖选题、热点选题 | 热点选题引擎：圈人群 / 建信任 / 搞线索三方向，含五道筛与证据门槛 | 无（外部台账/案例库由用户自管） |
 | `wx-newspic-sop` | 🖼️ | 小绿书、图片消息、微信短文发布、PPT配图 | 小绿书全链路 SOP：短文编辑 → PPT 配图 → 发布公众号草稿箱 | html-ppt 技能、wx-newspic CLI、微信凭证 |
 
 > `remove-bg` 已独立为 [rembg-mcp-server](https://github.com/lpreterite/rembg-mcp-server) 仓库，不再收录本仓库。
+> `image-gen` 已转为 MCP 服务（部署于飞牛 NAS），不再收录本仓库。
 
 ## 安装
 
@@ -39,7 +39,7 @@ npx skills add lpreterite/skill-optimizer
 ### 兼容旧安装方式（codebuddy 系 npx skill，单数）
 
 ```bash
-SKILL_BASE_URL=https://github.com/lpreterite/packy-ai-toolkit/tree/main npx skill skills/image-gen
+SKILL_BASE_URL=https://github.com/lpreterite/packy-ai-toolkit/tree/main npx skill skills/topic-engine
 ```
 
 ### 本机多 Agent 开发（软链）
