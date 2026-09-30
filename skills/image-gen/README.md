@@ -24,9 +24,12 @@ ln -s $(pwd)/skills/image-gen ~/.openclaw/skills/image-gen
 ### 方式三：npm（全局安装或临时运行）
 
 ```bash
-# 全局安装
-npm install -g @packy-tang/image-gen
+# 从本技能目录直接全局安装（方案 B：工具随技能目录分发）
+npm i -g ./skills/image-gen
 generate-image "一只猫"
+
+# 或发布后通过 npm 安装
+npm install -g @packy-tang/image-gen
 
 # 临时运行
 npx -y @packy-tang/image-gen "一只猫"
